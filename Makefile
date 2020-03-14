@@ -25,11 +25,17 @@
 # $Id: Makefile,v 1.3 2004/07/19 05:19:55 sobomax Exp $
 #
 # Linux Makefile by Matt Smith <mcs@darkregion.net>, 2011/01/04
+#
+# Install targets by Jari Ronkainen <ronchaine@gmail.com>, 2020/03/14
 
 CC=cc
 AR=ar
 EXECINFO_CFLAGS=$(CFLAGS) -O2 -pipe -fno-strict-aliasing -std=gnu99 -fstack-protector -c
 EXECINFO_LDFLAGS=$(LDFLAGS)
+
+ifeq ($(PREFIX),)
+    PREFIX := /usr/local
+endif
 
 all: static dynamic
 
@@ -39,9 +45,23 @@ static:
 	$(AR) rcs libexecinfo.a stacktraverse.o execinfo.o
 
 dynamic:
-	$(CC) -fpic -DPIC $(EXECINFO_CFLAGS) $(EXECINFO_LDFLAGS) stacktraverse.c -o stacktraverse.So
-	$(CC) -fpic -DPIC $(EXECINFO_CFLAGS) $(EXECINFO_LDFLAGS) execinfo.c -o execinfo.So
-	$(CC) -shared -Wl,-soname,libexecinfo.so.1 -o libexecinfo.so.1 stacktraverse.So execinfo.So
+	$(CC) -fpic -DPIC $(EXECINFO_CFLAGS) $(EXECINFO_LDFLAGS) stacktraverse.c -o stacktraverse.so
+	$(CC) -fpic -DPIC $(EXECINFO_CFLAGS) $(EXECINFO_LDFLAGS) execinfo.c -o execinfo.so
+	$(CC) -shared -Wl,-soname,libexecinfo.so.1 -o libexecinfo.so.1 stacktraverse.so execinfo.so
 
 clean:
 	rm -rf *.o *.So *.a *.so
+
+install-headers:
+	install -d ${DESTDIR}${PREFIX}/include/
+	install -m 644 execinfo.h ${DESTDIR}${PREFIX}/include/
+
+install-static: static install-headers
+	install -d ${DESTDIR}${PREFIX}/lib/
+	install -m 644 libexecinfo.a ${DESTDIR}${PREFIX}/lib/
+
+install-dynamic: dynamic install-headers
+	install -d ${DESTDIR}${PREFIX}/lib/
+	install -m 644 libexecinfo.so.1 ${DESTDIR}${PREFIX}/lib/
+
+install: install-static install-dynamic
