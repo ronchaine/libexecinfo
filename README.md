@@ -1,5 +1,11 @@
-I. About
+libexecinfo for musl systems, originally from FreeBSD, with patches
+from Alpine linux.
 
+Original README
+===============
+
+About
+-----
 This is a quick-n-dirty BSD licensed clone of backtrace facility found
 in the GNU libc, mainly intended for porting linuxish code to BSD
 platforms, however it can be used at any platform which has a gcc
@@ -10,8 +16,8 @@ More information about API can be found here:
 http://www.gnu.org/software/libc/manual/html_node/Backtraces.html
 
 
-II. Known limitations
-
+Known limitations
+-----------------
 - Depth of stack trace is limited to 128 levels, which should be enough
   in most cases, the limit can be increased by editing gen.py and
   regenerating stacktraverse.c. The reason for that limitation steams
@@ -24,8 +30,8 @@ II. Known limitations
   in order for function names to be displayed properly.
 
 
-III. Author
-
+Author
+------
 Author of this junk is Maxim Sobolev <sobomax@FreeBSD.org>. Any feedback,
 patches or suggestions are greatly appreciated.
 
