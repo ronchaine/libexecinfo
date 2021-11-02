@@ -34,7 +34,7 @@ EXECINFO_CFLAGS=$(CFLAGS) -O2 -pipe -fno-strict-aliasing -std=gnu99 -fstack-prot
 EXECINFO_LDFLAGS=$(LDFLAGS)
 
 ifeq ($(PREFIX),)
-    PREFIX := /usr/local
+    PREFIX := /usr/
 endif
 
 all: static dynamic
